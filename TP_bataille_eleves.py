@@ -65,9 +65,10 @@ class Carte():
 
 
 class JeuDeCartes():
-    paquet = []
+    
 
     def __init__(self):
+        self.paquet = []
         for couleur in ["Coeur", "Carreau", "Trèfle", "Pique"]:
             for valeur in range(13):
                 self.paquet.append(Carte(valeur, couleur))
@@ -93,14 +94,13 @@ class Joueur():
 
 class Partie():
     """Objet représentant une partie de Bataille"""
-    nb_tours = 0
-    nb_batailles = 0
     
 
     def __init__(self, joueur1, joueur2):
         """Constructeur"""
         # Création des 2 joueurs
         self.joueurs = (Joueur(joueur1), Joueur(joueur2))
+        
 
         # Création et mélange du jeu de carte
         self.jeu = JeuDeCartes()
@@ -112,7 +112,8 @@ class Partie():
             self.joueurs[1].jeu.append(self.jeu.paquet.pop())
 
         # Statistiques
-        #TODO c'est quoi que je criss la
+        self.nb_tours = 0
+        self.nb_batailles = 0
 
     def joue(self):
         """Tant que les 2 joueurs ont encore des cartes, on compare celle du haut du tas que l'on enlève (pop)
@@ -137,15 +138,15 @@ class Partie():
                 self.joueurs[1].gain.append(carte_2)
             else:
                 self.joue_bataille([carte_1, carte_2])
-            #TODO WTf
+            
             print(f"{self.joueurs[0]} a {len(self.joueurs[0].gain)} cartes et {self.joueurs[1]} a {len(self.joueurs[1].gain)} cartes.")
             
         #dire qui a gagné
         print("partie terminée en ", self.nb_tours, "tours et", self.nb_batailles, "batailles.")
         if len(self.joueurs[0].gain) > len(self.joueurs[1].gain):
-            print(f"Victoir de {self.joueurs[0]}!")
+            print(f"Victoire de {self.joueurs[0]}!")
         elif len(self.joueurs[1].gain) > len(self.joueurs[0].gain):
-            print(f"Victoir de {self.joueurs[1]}!")
+            print(f"Victoire de {self.joueurs[1]}!")
         else:
             print("La partie est terminée en égalité.")
             print(f"{self.joueurs[0]} a {len(self.joueurs[0].gain)} cartes et {self.joueurs[1]} a {len(self.joueurs[1].gain)} cartes.")
