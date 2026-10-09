@@ -46,8 +46,6 @@ class Carte():
         "12": "As",
     }
 
-
-
     def __init__(self, valeur, couleur):
         self.valeur = valeur
         self.couleur = couleur
@@ -70,14 +68,14 @@ class Carte():
 
 
 class JeuDeCartes():
-    """Objet représentant un jeu de 52 cartes"""
+    paquet = []
 
     def __init__(self):
-        """Constructeur. Créé les 52 cartes des 4 couleurs et les ajoute à l'attribut paquet"""
-        ...
+        for couleur in ["Coeur", "Carreau", "Trèfle", "Pique"]:
+            for valeur in range(2, 15):
+                self.paquet.append(Carte(valeur, couleur))
 
     def melange(self):
-        """Mélange le paquet. Méthode terminée"""
         shuffle(self.paquet)
 
 
