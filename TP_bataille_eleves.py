@@ -22,28 +22,25 @@ Valet: 9
 3: 1
 2: 0
 
-
-
-
 """
 class Carte():
     """Objet représentant une carte d'un jeu de 52 cartes
-    valeur entière de 2 à 14, 11 pour le Valet, 12 pour la Dame,
-    13 pour le Roi et 14 pour l'As"""
+    valeur entière de 0 à 12 : 0 pour le 2, ..., 11 pour le Roi
+    et 12 pour l'As"""
     valeurCarte = {
-        "0": "2",
-        "1": "3",
-        "2": "4",
-        "3": "5",
-        "4": "6",
-        "5": "7",
-        "6": "8",
-        "7": "9",
-        "8": "10",
-        "9": "Valet",
-        "10": "Dame",
-        "11": "Roi",
-        "12": "As",
+        0: "2",
+        1: "3",
+        2: "4",
+        3: "5",
+        4: "6",
+        5: "7",
+        6: "8",
+        7: "9",
+        8: "10",
+        9: "Valet",
+        10: "Dame",
+        11: "Roi",
+        12: "As",
     }
 
     def __init__(self, valeur, couleur):
@@ -53,7 +50,7 @@ class Carte():
     def __str__(self):
         """Methode permettant de visualiser une carte sous forme lisible, 
         comme 2 de Pique ou Dame de Coeur"""
-        return self.valeurCarte[str(self.valeur)] + " de " + self.couleur    
+        return self.valeurCarte[self.valeur] + " de " + self.couleur    
 
     def __repr__(self):
         return self.__str__()
@@ -72,7 +69,7 @@ class JeuDeCartes():
 
     def __init__(self):
         for couleur in ["Coeur", "Carreau", "Trèfle", "Pique"]:
-            for valeur in range(2, 15):
+            for valeur in range(13):
                 self.paquet.append(Carte(valeur, couleur))
 
     def melange(self):
@@ -81,43 +78,107 @@ class JeuDeCartes():
 
 class Joueur():
     """Objet représentant un joueur de cartes"""
+    jeu = []
+    gain = []
 
-    def __init__(self):
-        """Constructeur"""
-
+    def __init__(self, id):
+        self.id = id
 
     def __str__(self):
-        """Doit convertir la première lettre d'une chaîne de caractères en majuscule et toutes les autres lettres en minuscules."""
-        ...
+        return self.id.capitalize()
 
     def __repr__(self):
-        """Appelle __str__"""
-        ...
+        return self.__str__()
 
 
 class Partie():
     """Objet représentant une partie de Bataille"""
+    nb_tours = 0
+    nb_batailles = 0
+    
 
-    def __init__(self):
+    def __init__(self, joueur1, joueur2):
         """Constructeur"""
         # Création des 2 joueurs
-        
+        self.joueurs = (Joueur(joueur1), Joueur(joueur2))
+
         # Création et mélange du jeu de carte
-        
+        self.jeu = JeuDeCartes()
+        self.jeu.melange()
+
         # Distribution des cartes aux deux joueurs
+        for i in range(26):
+            self.joueurs[0].jeu.append(self.jeu.paquet.pop())
+            self.joueurs[1].jeu.append(self.jeu.paquet.pop())
 
         # Statistiques
+        #TODO c'est quoi que je criss la
 
     def joue(self):
         """Tant que les 2 joueurs ont encore des cartes, on compare celle du haut du tas que l'on enlève (pop)
          S'il y a bataille, on appelle la méthode concernée
          Si la partie est finie, on affiche les informations requises"""
-        ...
+        print("Début de la partie...")
+        while self.joueurs[0].jeu and self.joueurs[1].jeu:
+            print("...")
+            self.nb_tours += 1
+            carte_1 = self.joueurs[0].jeu.pop()
+            carte_2 = self.joueurs[1].jeu.pop()
+            print(f"{self.joueurs[0]} --------- {self.joueurs[1]}")
+            print(f"{carte_1} --------- {carte_2}")
+            if carte_1 > carte_2:
+                print(f"{self.joueurs[0]} l'emporte!")
+                self.joueurs[0].gain.append(carte_1)
+                self.joueurs[0].gain.append(carte_2)
+            elif carte_2 > carte_1:
+                print(f"{self.joueurs[1]} l'emporte!")
+                self.joueurs[1].gain.append(carte_1)
+                self.joueurs[1].gain.append(carte_2)
+            else:
+                self.joue_bataille([carte_1, carte_2])
+        #dire qui a gagné
+        print("partie terminée en ", self.nb_tours, "tours et", self.nb_batailles, "batailles.")
+        if len(self.joueurs[0].gain) > len(self.joueurs[1].gain):
+            print(f"Victoir de {self.joueurs[0]}!")
+        elif len(self.joueurs[1].gain) > len(self.joueurs[0].gain):
+            print(f"Victoir de {self.joueurs[1]}!")
+        else:
+            print("La partie est terminée en égalité.")
+            print(f"{self.joueurs[0]} a {len(self.joueurs[0].gain)} cartes et {self.joueurs[1]} a {len(self.joueurs[1].gain)} cartes.")
 
-    def joue_bataille(self, carte_1, carte_2):
+    def joue_bataille(self, cartes):
         """Méthode appelée par 'joue' Il faut tirer une carte masquée et une carte visible. Peut redéclancher une bataille """
+        print("...")
         print("Bataille !")
-        ...
+        self.nb_batailles += 1
+
+        carte_1 = self.joueurs[0].jeu.pop() if self.joueurs[0].jeu else None
+        carte_2 = self.joueurs[1].jeu.pop() if self.joueurs[1].jeu else None
+
+        carte_cachee_1 = self.joueurs[0].jeu.pop() if self.joueurs[0].jeu else None
+        carte_cachee_2 = self.joueurs[1].jeu.pop() if self.joueurs[1].jeu else None
+
+        if carte_1 and carte_2:
+            print(f"{self.joueurs[0]} --------- {self.joueurs[1]}")
+            print(f"{carte_1} --------- {carte_2}")
+            if carte_1 > carte_2:
+                print(f"{self.joueurs[0]} gagne la bataille!")
+                self.joueurs[0].gain.append(cartes)
+                self.joueurs[0].gain.append(carte_1)
+                self.joueurs[0].gain.append(carte_2)
+                self.joueurs[0].gain.append(carte_cachee_1)
+                self.joueurs[0].gain.append(carte_cachee_2)
+                
+            elif carte_2 > carte_1:
+                print(f"{self.joueurs[1]} gagne la bataille!")
+                self.joueurs[1].gain.append(cartes)
+                self.joueurs[1].gain.append(carte_1)
+                self.joueurs[1].gain.append(carte_2)
+                self.joueurs[1].gain.append(carte_cachee_1)
+                self.joueurs[1].gain.append(carte_cachee_2)
+            else:
+                cartes.extend([carte_1, carte_2, carte_cachee_1, carte_cachee_2])
+                self.joue_bataille(cartes)
 
 if __name__ == "__main__":
     p = Partie("Toto", "Titi")
