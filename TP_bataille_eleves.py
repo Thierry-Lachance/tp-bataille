@@ -78,11 +78,11 @@ class JeuDeCartes():
 
 class Joueur():
     """Objet représentant un joueur de cartes"""
-    jeu = []
-    gain = []
 
     def __init__(self, id):
         self.id = id
+        self.jeu = []
+        self.gain = []
 
     def __str__(self):
         return self.id.capitalize()
