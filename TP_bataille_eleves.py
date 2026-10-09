@@ -119,12 +119,13 @@ class Partie():
          S'il y a bataille, on appelle la méthode concernée
          Si la partie est finie, on affiche les informations requises"""
         print("Début de la partie...")
+        print(f"{self.joueurs[0]} --------- {self.joueurs[1]}")
         while self.joueurs[0].jeu and self.joueurs[1].jeu:
             print("...")
             self.nb_tours += 1
             carte_1 = self.joueurs[0].jeu.pop()
             carte_2 = self.joueurs[1].jeu.pop()
-            print(f"{self.joueurs[0]} --------- {self.joueurs[1]}")
+            
             print(f"{carte_1} --------- {carte_2}")
             if carte_1 > carte_2:
                 print(f"{self.joueurs[0]} l'emporte!")
@@ -136,6 +137,9 @@ class Partie():
                 self.joueurs[1].gain.append(carte_2)
             else:
                 self.joue_bataille([carte_1, carte_2])
+            #TODO WTf
+            print(f"{self.joueurs[0]} a {len(self.joueurs[0].gain)} cartes et {self.joueurs[1]} a {len(self.joueurs[1].gain)} cartes.")
+            
         #dire qui a gagné
         print("partie terminée en ", self.nb_tours, "tours et", self.nb_batailles, "batailles.")
         if len(self.joueurs[0].gain) > len(self.joueurs[1].gain):
@@ -158,8 +162,8 @@ class Partie():
         carte_cachee_1 = self.joueurs[0].jeu.pop() if self.joueurs[0].jeu else None
         carte_cachee_2 = self.joueurs[1].jeu.pop() if self.joueurs[1].jeu else None
 
-        if carte_1 and carte_2:
-            print(f"{self.joueurs[0]} --------- {self.joueurs[1]}")
+        if carte_1 and carte_2 and carte_cachee_1 and carte_cachee_2:
+            print("Carte cachée --------- Carte cachée")
             print(f"{carte_1} --------- {carte_2}")
             if carte_1 > carte_2:
                 print(f"{self.joueurs[0]} gagne la bataille!")
